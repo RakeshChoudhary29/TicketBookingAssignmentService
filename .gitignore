@@ -1,3 +1,17 @@
-node_modules/
+# Node modules folder
+/node_modules/
+
+# Build output (compiled JavaScript files)
+dist/
+
+# TypeScript build files
+*.tsbuildinfo
+
+# Logs
+*.log
 
 .env
+
+# Operating system files (e.g., macOS, Windows)
+.DS_Store
+Thumbs.db

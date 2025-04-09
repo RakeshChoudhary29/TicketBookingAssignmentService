@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ES6",                     // Output to ES6 compatible JavaScript
+    "module": "commonjs",                // Use CommonJS for module resolution (standard for Node.js)
+    "moduleResolution": "node",          // Resolve modules like Node.js
+    "outDir": "./dist",                  // Output compiled JavaScript to dist folder
+    "strict": true,                      // Enable strict mode for better type safety
+    "esModuleInterop": true,             // Enable interop between CommonJS and ES Modules
+    "skipLibCheck": true,                // Skip type checking for library files (optional, speeds up compilation)
+    "forceConsistentCasingInFileNames": true  // Ensure file name case consistency
+  },
+  "include": [
+    "*.ts"                              // Include all TypeScript files in the root directory
+  ],
+  "exclude": [
+    "node_modules"                       // Exclude node_modules folder from compilation
+  ]
+}
