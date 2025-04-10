@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { userService } from "../Service/userService";
 
-const healthCheck = (req: Request, res: Response) => {
-  return res.json({ message: "everything is ok" });
+const healthCheck = (req: Request, res: Response): void => {
+  res.json({ message: "everything is ok" });
 };
 
 const ResiterUser = async (req: Request, res: Response) => {
@@ -14,16 +14,16 @@ const ResiterUser = async (req: Request, res: Response) => {
     const response: any = await userService.addUser(name, mailId, password);
 
     if (response) {
-      return res.json({
+      res.json({
         success: true,
         message: "User Registered Successfully",
       });
     } else {
-      return res.json({ success: false, message: "something went wrong" });
+      res.json({ success: false, message: "something went wrong" });
     }
   } catch (error: any) {
     console.log("error in registeruser", error);
-    return res.json({ success: false, message: error.message, error: error });
+    res.json({ success: false, message: error.message, error: error });
   }
 };
 
@@ -36,9 +36,9 @@ const LoginUser = async (req: Request, res: Response) => {
     console.log(response);
 
     if (response) {
-      return res.json({ success: true, message: "logged in succcessfully" });
+      res.json({ success: true, message: "logged in succcessfully" });
     } else {
-      return res.json({ success: false, message: "Wrong userid or password" });
+      res.json({ success: false, message: "Wrong userid or password" });
     }
   } catch (error: any) {
     console.log("error in loginUser", error);
