@@ -7,7 +7,7 @@ const healthCheck = (req: Request, res: Response): void => {
 };
 
 const generateToken = (data: any) => {
-  const sectetKey = process.env.SECRET_KEY ?? "load lasna";
+  const sectetKey = process.env.SECRET_KEY ?? "secret_keyabc";
   console.log(sectetKey);
   return jsonwebtoken.sign(data, sectetKey, {
     expiresIn: "3h",

@@ -10,7 +10,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
   }
 
   try {
-    const sectetKey = process.env.SECRET_KEY ?? "load lasna";
+    const sectetKey = process.env.SECRET_KEY ?? "secret_keyabc";
     let decoded = jsonwebtoken.verify(token, sectetKey);
     next();
   } catch (error) {
