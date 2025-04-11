@@ -1,16 +1,23 @@
-import mongoose from "mongoose";
+import { pool } from "./connectDb";
 
-const seatsSchema = new mongoose.Schema({
-  booked: { type: Boolean, default: false },
-  seatNumber: { type: Number, required: true },
-  bookedBy: {
-    type: mongoose.Schema.Types.ObjectId, // Define it as an ObjectId
-    ref: "User", // Reference the User model
-    required: true,
-    default: "",
-  },
-});
+const createSeatsTable = async () => {
+  const query = `
+    CREATE TABLE IF NOT EXISTS seats (
+      id SERIAL PRIMARY KEY,
+      booked BOOLEAN DEFAULT FALSE,
+      seat_number INTEGER NOT NULL,
+      booked_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  `;
 
-const Seats = mongoose.model("Seats", seatsSchema);
+  try {
+    await pool.query(query);
+    console.log("✅ 'seats' table created successfully!");
+  } catch (err) {
+    console.error("❌ Error creating 'seats' table:", err);
+  }
+};
 
-export default Seats;
+export default createSeatsTable;

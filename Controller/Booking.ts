@@ -140,10 +140,10 @@ export const bookTickets = async (req: Request, res: Response) => {
       Array(7).fill(1)
     );
 
-    ticketsData.map((seat) => {
-      const seatNumber = seat.seatNumber;
-      const row = Math.floor((seatNumber - 1) / 7);
-      const col = (seatNumber - 1) % 7;
+    ticketsData.map((seat: any) => {
+      const seat_number = seat.seat_number;
+      const row = Math.floor((seat_number - 1) / 7);
+      const col = (seat_number - 1) % 7;
       seatsGrid[row][col] = seat.booked ? 1 : 0;
     });
 
@@ -193,5 +193,5 @@ export const resetTickets = async (req: Request, res: Response) => {
     res.json({ success: true, message: "Seats cleared Successfully" });
     return;
   }
-//   res.json({success:false,message})
+  //   res.json({success:false,message})
 };

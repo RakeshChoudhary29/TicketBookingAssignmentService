@@ -1,11 +1,25 @@
-import mongoose from "mongoose";
+// userSchema.ts
+import { pool } from "./connectDb";
 
-const userSchema = new mongoose.Schema({
-  name: { type: String },
-  mailId: { type: String, required: true, unique: true },
-  password: { type: String, require: true },
-});
+// SQL query to create the 'users' table in PostgreSQL
+const createUserTable = async () => {
+  const query = `
+    CREATE TABLE IF NOT EXISTS users (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(255),
+      mail_id VARCHAR(255) NOT NULL UNIQUE,
+      password VARCHAR(255) NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  `;
 
-const User = mongoose.model("User", userSchema);
+  try {
+    await pool.query(query);
+    console.log("Users table created successfully!");
+  } catch (err) {
+    console.error("Error creating table:", err);
+  }
+};
 
-export default User;
+export default createUserTable;

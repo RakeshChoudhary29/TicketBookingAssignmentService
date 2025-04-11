@@ -1,10 +1,12 @@
 import express from "express";
-import connectDB from "./Entity/connectDb";
 import { loginController } from "./Controller/login";
 import { bookTickets, getTicketData, resetTickets } from "./Controller/Booking";
 import cors from "cors";
 import jwt from "jsonwebtoken";
 import verifyToken from "./Middleware/authMiddleware";
+import { connectDB } from "./Entity/connectDb";
+import createSeatsTable from "./Entity/seats";
+import createUserTable from "./Entity/User";
 
 const { healthCheck, RegisterUser, LoginUser } = loginController;
 
@@ -23,6 +25,8 @@ app.use(express.json());
 
 //connecting to the db
 connectDB();
+createUserTable();
+createSeatsTable();
 
 // defind routes
 app.get("/", healthCheck);
