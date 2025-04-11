@@ -2,8 +2,18 @@ import { Request, Response } from "express";
 import { seatsService } from "../Service/seatsService";
 
 export const getTicketData = async (req: Request, res: Response) => {
-  const data = await seatsService.getSeatsData();
-  res.json({ success: true, seatsData: data });
+  try {
+    const data = await seatsService.getSeatsData();
+    res.json({ success: true, seatsData: data });
+  } catch (error: any) {
+    console.log(error);
+    res.json({
+      success: false,
+      message: error.message,
+      error: error,
+      seatsData: [],
+    });
+  }
 };
 
 const directions = [
@@ -187,11 +197,20 @@ export const bookTickets = async (req: Request, res: Response) => {
 };
 
 export const resetTickets = async (req: Request, res: Response) => {
-  const resp: any = seatsService.resetSeats();
+  try {
+    const resp: any = seatsService.resetSeats();
 
-  if (resp) {
-    res.json({ success: true, message: "Seats cleared Successfully" });
-    return;
+    if (resp) {
+      res.json({ success: true, message: "Seats cleared Successfully" });
+      return;
+    }
+    //   res.json({success:false,message})
+  } catch (error: any) {
+    console.log(error);
+    res.json({
+      success: false,
+      message: error.message,
+      error: error,
+    });
   }
-  //   res.json({success:false,message})
 };

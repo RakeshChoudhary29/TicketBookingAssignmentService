@@ -8,9 +8,8 @@ const healthCheck = (req: Request, res: Response): void => {
 
 const generateToken = (data: any) => {
   const sectetKey = process.env.SECRET_KEY ?? "secret_keyabc";
-  console.log(sectetKey);
   return jsonwebtoken.sign(data, sectetKey, {
-    expiresIn: "3h",
+    expiresIn: "2h",
   });
 };
 
@@ -36,7 +35,7 @@ const RegisterUser = async (req: Request, res: Response) => {
   } catch (error: any) {
     console.log("error in registeruser", error);
 
-    if (error.errorResponse.code == 11000) {
+    if (error.code == "23505") {
       res.json({ success: false, message: "Mail Id Already Registered !" });
       return;
     }
