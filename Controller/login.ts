@@ -28,6 +28,7 @@ const RegisterUser = async (req: Request, res: Response) => {
       res.json({
         success: true,
         message: "User Registered Successfully",
+        token,
       });
     } else {
       res.json({ success: false, message: "something went wrong" });

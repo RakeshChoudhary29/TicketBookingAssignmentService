@@ -10,7 +10,8 @@ const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
   }
 
   try {
-    let decoded = jsonwebtoken.verify(token, "wrong-secret");
+    const sectetKey = process.env.SECRET_KEY ?? "load lasna";
+    let decoded = jsonwebtoken.verify(token, sectetKey);
     next();
   } catch (error) {
     res.status(403).json({ message: "Invalid or expired token" });
