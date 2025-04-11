@@ -17,7 +17,7 @@ app.use(cors());
 // Or more secure version:
 app.use(
   cors({
-    origin: "http://localhost:5173", // allow only frontend origin
+    origin: process.env.FRONT_END_URL, // allow only frontend origin
   })
 );
 
