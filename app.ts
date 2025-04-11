@@ -3,8 +3,10 @@ import connectDB from "./Entity/connectDb";
 import { loginController } from "./Controller/login";
 import { bookTickets, getTicketData, resetTickets } from "./Controller/Booking";
 import cors from "cors";
+import jwt from "jsonwebtoken";
+import verifyToken from "./Middleware/authMiddleware";
 
-const { healthCheck, ResiterUser, LoginUser } = loginController;
+const { healthCheck, RegisterUser, LoginUser } = loginController;
 
 const app = express();
 
@@ -25,9 +27,11 @@ connectDB();
 // defind routes
 app.get("/", healthCheck);
 
-app.post("/register", ResiterUser);
+app.post("/register", RegisterUser);
 app.post("/login", LoginUser);
 // app.post("/logout", LogoutUser);
+
+app.use(verifyToken);
 
 // ticket booking apis
 
