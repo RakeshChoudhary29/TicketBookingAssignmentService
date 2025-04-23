@@ -16,41 +16,6 @@ export const getTicketData = async (req: Request, res: Response) => {
   }
 };
 
-const directions = [
-  [0, -1],
-  [0, 1],
-  [-1, 0],
-  [1, 0],
-];
-
-const DFS = (
-  seatsGrid: number[][],
-  visited: boolean[][],
-  elements: number[],
-  i: number,
-  j: number
-) => {
-  let m = seatsGrid.length;
-  let n = seatsGrid[0].length;
-
-  if (
-    i < 0 ||
-    i >= m ||
-    j < 0 ||
-    j >= n ||
-    visited[i][j] ||
-    seatsGrid[i][j] == 1
-  )
-    return;
-
-  elements.push(i * 7 + j + 1);
-  visited[i][j] = true;
-
-  for (let dir of directions) {
-    DFS(seatsGrid, visited, elements, i + dir[0], j + dir[1]);
-  }
-};
-
 const assignSeatsInRow = (seatsGrid: number[][], ticketCount: number) => {
   for (let i = 0; i < seatsGrid.length; i++) {
     let row = seatsGrid[i];
@@ -75,52 +40,73 @@ const assignSeatsInRow = (seatsGrid: number[][], ticketCount: number) => {
   return [];
 };
 
+// taking the elements from  the row and next rows to it
+const getSeats = (
+  seatsGrid: number[][],
+  tickcount: number,
+  row: number
+): number[][] => {
+  // start from the row th row and keep adding the new seats
+
+  let m = seatsGrid.length,
+    n = seatsGrid[0].length;
+  let seatsArr: number[][] = [];
+  let seatsCount = 0;
+
+  for (let i = row; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (seatsGrid[i][j] == 0) {
+        seatsArr.push([i, j]);
+        seatsCount++;
+        if (seatsCount == tickcount) return seatsArr;
+      }
+    }
+  }
+
+  return [];
+};
+
+// calculate the cost of the arr
+// the measure that the seats are  near
+
+const calCost = (seatsArr: number[][]) => {
+  // only penlty for diff raw => this prioratize the min row changes
+  let n = seatsArr.length;
+  let cost = 0;
+
+  for (let i = 1; i < n; i++) {
+    cost += Math.abs(seatsArr[i - 1][0] - seatsArr[i][0]);
+    // +Math.abs(seatsArr[i - 1][1] - seatsArr[i][1]);
+  }
+
+  return cost;
+};
+
 const assignNearestTickets = (seatsGrid: number[][], ticketCount: number) => {
-  // use DFS to find the connected clusters
-  // and then assign seats
+  // using another approach if no seats available in one row
 
   let m = seatsGrid.length;
   let n = seatsGrid[0].length;
-  const visited: boolean[][] = Array.from({ length: m }, () =>
-    Array(n).fill(false)
-  );
 
-  let clusterArr: number[][] = [];
+  let selectedSeats: number[][] = [];
+  let minCost: number = Infinity;
 
+  // start the seats from each row and keep adding the seats and
+  // calculate the cost of the selected seats
   for (let i = 0; i < m; i++) {
-    for (let j = 0; j < m; j++) {
-      if (visited[i][j] || seatsGrid[i][j] == 1) continue;
+    const seatsArr = getSeats(seatsGrid, ticketCount, i);
 
-      const elements: number[] = [];
-      DFS(seatsGrid, visited, elements, i, j);
-      if (elements && elements.length) clusterArr.push(elements);
-
-      // if any cluster is of the size greater then  ticketCount send that cluster
-      if (elements.length >= ticketCount) return elements.slice(0, ticketCount);
+    if (seatsArr && seatsArr.length) {
+      //calculate the cost of this arr
+      const cost = calCost(seatsArr);
+      if (cost < minCost) {
+        minCost = cost;
+        selectedSeats = seatsArr;
+      }
     }
   }
-
-  // require multiple cluster to make ticketCount seats
-
-  clusterArr.sort((a: any, b: any) => a.length - b.length);
-
-  let bookSeats = [];
-
-  for (let cluster of clusterArr) {
-    let remainingSeats: number = ticketCount - bookSeats.length;
-
-    if (remainingSeats > cluster.length) {
-      // add all the elements into the bookSeats
-      bookSeats.push(...cluster);
-    } else {
-      bookSeats.push(...cluster.slice(0, remainingSeats));
-      break;
-    }
-  }
-
-  if (bookSeats.length == ticketCount) return bookSeats;
-
-  return [];
+  // convert the index (i,j) to the nubmer
+  return selectedSeats.map((value) => value[0] * 7 + value[1] + 1);
 };
 
 const assignSeats = (seatsGrid: number[][], ticketCount: number) => {
@@ -129,7 +115,6 @@ const assignSeats = (seatsGrid: number[][], ticketCount: number) => {
   if (!currBooked || currBooked.length == 0) {
     // no seats available in one row find other seats
     currBooked = assignNearestTickets(seatsGrid, ticketCount);
-    console.log("from cluster", currBooked);
   }
 
   return currBooked;
