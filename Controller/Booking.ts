@@ -74,8 +74,12 @@ const calCost = (seatsArr: number[][]) => {
   let n = seatsArr.length;
   let cost = 0;
 
-  for (let i = 1; i < n; i++) {
-    cost += Math.abs(seatsArr[i - 1][0] - seatsArr[i][0]);
+  // try to keep most number of seats in the same row
+  for (let i = 0; i < n; i++) {
+    for (let j = i + 1; j < n; j++) {
+      cost += Math.abs(seatsArr[j][0] - seatsArr[i][0]);
+    }
+
     // +Math.abs(seatsArr[i - 1][1] - seatsArr[i][1]);
   }
 
